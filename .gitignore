@@ -4,10 +4,11 @@ out/
 dist/
 coverage/
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 .vercel/
 .DS_Store
 *.log
+*.tsbuildinfo
 tmp/
 private-media/

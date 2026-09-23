@@ -174,3 +174,9 @@ O Alpha é considerado utilizável quando existirem:
 - identidade visual FaceLove consistente.
 
 O objetivo inicial não é reconstruir Tinder, OnlyFans ou Facebook. É provar o **núcleo FaceLove** de identidade + conteúdo + acesso e deixar a fundação preparada para os restantes produtos.
+
+## Preview implementada — Spaces Alpha 0.1
+
+Na branch `work/spaces-alpha`, execute `npm ci && npm run dev`. Estão implementadas as rotas `/`, `/spaces`, `/@anaoliveira`, `/access`, `/s/[token]` e o proxy autorizado `/api/media/[key]`. A fixture visual funciona sem configuração de media; fotografias e vídeos reais exigem o laboratório irmão local.
+
+O código de `MediaCard` e `MediaPlayer` consome a URL interna FaceLove. A origem MEGA é resolvida apenas no servidor de `facelove-conteudo`. Consulte [docs/ALPHA-RUNBOOK.md](docs/ALPHA-RUNBOOK.md) para configurar, testar e conhecer os limites desta fase.
