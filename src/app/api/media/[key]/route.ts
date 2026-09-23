@@ -2,32 +2,34 @@ import { NextRequest, NextResponse } from "next/server";
 import { hasDemoAccess } from "@/lib/access";
 import { assetByKey, canView } from "@/lib/media/fixture";
 import { getGatewayCatalog, proxyMedia } from "@/lib/media/providers/gateway";
-import { serveDemoMedia } from "@/lib/media/providers/demo";
+import { isDemoProviderActive, serveDemoMedia } from "@/lib/media/providers/demo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 type Context = { params: Promise<{ key: string }> };
 
 async function handle(request: NextRequest, context: Context, method: "GET" | "HEAD") {
   const { key } = await context.params;
-  const asset = assetByKey(key);
-  if (!asset) return NextResponse.json({ error: "Asset não encontrado" }, { status: 404 });
+  const fixture = assetByKey(key);
+  // The gateway catalogue contains metadata only. The provider stream is not
+  // opened until a permitted asset has been found and access is verified.
+  const catalog = fixture ? null : await getGatewayCatalog();
+  const asset = fixture ?? catalog?.assets.find(item => item.key === key);
+  if (!asset || (fixture && fixture.visibility !== "public" && !isDemoProviderActive())) {
+    return NextResponse.json({ error: "Asset não encontrado" }, { status: 404, headers: { "Cache-Control": "no-store" } });
+  }
   const access = await hasDemoAccess();
   if (!canView(asset.visibility, access)) {
     return NextResponse.json({ error: "Acesso necessário" }, { status: 403, headers: { "Cache-Control": "no-store" } });
   }
   try {
-    // The synthetic provider is available only in fixture mode. Authorization above
-    // applies equally to both providers and runs before any media file is opened.
-    const demo = await serveDemoMedia(key, request.headers.get("range"), method);
-    if (demo) return demo;
-    const catalog = await getGatewayCatalog();
-    const current = catalog?.find(item => item.key === key);
-    if (!current || current.visibility !== asset.visibility || current.mediaType !== asset.mediaType) {
-      return NextResponse.json({ error: "Asset indisponível" }, { status: 503, headers: { "Cache-Control": "no-store" } });
+    if (fixture) {
+      const demo = await serveDemoMedia(key, request.headers.get("range"), method);
+      return demo ?? NextResponse.json({ error: "Media indisponível" }, { status: 503, headers: { "Cache-Control": "no-store" } });
     }
     const upstream = await proxyMedia(key, request.headers.get("range") ?? undefined, method);
-    if (!upstream) return NextResponse.json({ error: "Gateway local não configurado" }, { status: 503 });
+    if (!upstream) return NextResponse.json({ error: "Gateway indisponível" }, { status: 503 });
     const headers = new Headers();
     for (const name of ["content-type", "content-length", "content-range", "accept-ranges"]) {
       const value = upstream.headers.get(name);

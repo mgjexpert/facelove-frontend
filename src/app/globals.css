@@ -110,7 +110,7 @@ em { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: #f
 .feed-list { display: grid; gap: 20px }
 .post-card { border: 1px solid var(--facelove-border); background: var(--facelove-bg-elevated); border-radius: 13px; overflow: hidden }
 .post-author { display: flex; align-items: center; gap: 11px; padding: 17px 19px 13px }
-.post-avatar { position: relative; flex: none; height: 42px; width: 42px; border-radius: 50%; overflow: hidden; background: #3d303a }
+.post-avatar { position: relative; flex: none; height: 42px; width: 42px; border-radius: 50%; overflow: hidden; background: #3d303a; display: grid; place-items: center; color: var(--facelove-pink) }
 .post-avatar img { object-fit: cover; object-position: 76% 23% }
 .post-author > div:nth-child(2) { display: flex; flex-direction: column; flex: 1; gap: 3px }
 .post-author strong { font-size: .9rem }
@@ -150,6 +150,10 @@ em { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: #f
 .aside-divider { border-top: 1px solid var(--facelove-border); margin: 28px 0 16px }
 .feed-aside span { color: #b6adb7; font-size: .8rem }
 .gallery-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px }
+.pack-summary { margin: 0 0 20px; border: 1px solid var(--facelove-border); background: var(--facelove-bg-elevated); border-radius: 12px; padding: 20px }
+.pack-summary h2 { margin: 8px 0 4px; font-size: 1.3rem }
+.pack-summary p { margin: 0; color: var(--facelove-text-muted); font-size: .83rem }
+.pack-summary .locked-card { margin-top: 18px; min-height: 170px; border-radius: 9px }
 .media-card-compact { border: 1px solid var(--facelove-border); border-radius: 10px }
 .media-card-compact .media-stage { aspect-ratio: 4/3 }
 .about-panel, .empty-panel { padding: 32px; border-radius: 13px; border: 1px solid var(--facelove-border); background: var(--facelove-bg-elevated) }

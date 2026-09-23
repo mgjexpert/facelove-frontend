@@ -40,6 +40,6 @@ Para a preview com media ficcional, execute `npm run build && npm run start`, se
 ## Limitações da preview
 
 - Os botões Seguir e Mensagem são apenas estado visual; não simulam ações concluídas.
-- O gateway MEGA usa um processo Node persistente. Não colocar o streaming de vídeos grandes numa Function Vercel sem validar duração, tráfego e quota.
+- O gateway MEGA pode usar processo Node local ou uma Function Vercel. Vídeos grandes na Vercel exigem validar duração, tráfego e quota antes de escalar.
 - Falta geração de thumbnails, transcodificação, persistência de convites e autenticação Supabase.
-- A preview Vercel sem gateway entrega apenas media **ficcional**. Media real e tokens locais nunca entram no Git nem numa preview pública. O modo Vercel `production` desativa automaticamente este provider de demonstração.
+- A preview Vercel sem gateway entrega apenas media **ficcional**. Media real e tokens locais nunca entram no Git. O modo Vercel `production` não ativa automaticamente o provider; `FACELOVE_PUBLIC_DEMO_MEDIA=true` mostra apenas os clips/fotos ficcionais públicos. Media MEGA real exige gateway e convite.

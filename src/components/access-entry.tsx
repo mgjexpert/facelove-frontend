@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, KeyRound } from "lucide-react";
 
-export function AccessEntry() {
+export function AccessEntry({ demoAvailable }: { demoAvailable: boolean }) {
   const [value, setValue] = useState("");
   const router = useRouter();
   return (
@@ -17,7 +17,7 @@ export function AccessEntry() {
         <input id="token" className="access-input" value={value} onChange={event => setValue(event.target.value)} autoComplete="off" placeholder="Introduzir código" required />
         <button className="button button-primary access-submit" type="submit">Continuar <ArrowRight size={17} /></button>
       </form>
-      <p className="access-hint">Para explorar a interface sem media real, use <code>demo-preview</code>.</p>
+      {demoAvailable && <p className="access-hint">Para explorar a interface sem media real, use <code>demo-preview</code>.</p>}
     </div>
   );
 }

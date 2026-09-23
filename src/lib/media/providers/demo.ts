@@ -3,7 +3,6 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
-import { isGatewayConfigured } from "./gateway";
 
 // Synthetic media only. This provider is active when no external gateway is configured.
 // Keep the HTTP Range behavior aligned with facelove-conteudo/src/http/range.mjs.
@@ -23,6 +22,10 @@ export function isDemoProviderActive() {
   return !process.env.MEDIA_GATEWAY_URL && !process.env.MEDIA_GATEWAY_TOKEN && process.env.VERCEL_ENV !== "production";
 }
 
+export function isPublicShowcaseEnabled() {
+  return isDemoProviderActive() || process.env.FACELOVE_PUBLIC_DEMO_MEDIA === "true";
+}
+
 function byteRange(header: string | null, size: number) {
   if (!header) return { status: 200, start: 0, end: size - 1 };
   const match = /^bytes=(\d*)-(\d*)$/.exec(header);
@@ -35,7 +38,8 @@ function byteRange(header: string | null, size: number) {
 }
 
 export async function serveDemoMedia(key: string, header: string | null, method: "GET" | "HEAD") {
-  if (!isDemoProviderActive()) return null;
+  if (!isPublicShowcaseEnabled()) return null;
+  if (!isDemoProviderActive() && !/^ana-(img-00[1-4]|video-00[1-2])$/.test(key)) return null;
   const item = files[key];
   if (!item) return new Response(null, { status: 404 });
   const path = join(directory, item.file);

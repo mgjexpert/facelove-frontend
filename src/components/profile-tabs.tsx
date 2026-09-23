@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Grid2X2, Images, Video, Info } from "lucide-react";
-import type { MediaAsset, VisiblePost } from "@/lib/media/types";
+import type { MediaAsset, VisiblePack, VisiblePost } from "@/lib/media/types";
 import { MediaCard } from "./media-card";
 import { PostCard } from "./post-card";
+import { LockedMedia } from "./locked-media";
 
 type Tab = "posts" | "photos" | "videos" | "about";
 const tabs: { id: Tab; name: string; icon: typeof Grid2X2 }[] = [
@@ -13,11 +14,12 @@ const tabs: { id: Tab; name: string; icon: typeof Grid2X2 }[] = [
   { id: "about", name: "Sobre", icon: Info },
 ];
 
-export function ProfileTabs({ posts, assets, access, live, mode, bio }: {
-  posts: VisiblePost[]; assets: MediaAsset[]; access: boolean; live: boolean; mode: "demo" | "gateway" | "unavailable"; bio: string;
+export function ProfileTabs({ posts, assets, packs, access, live, mode, bio }: {
+  posts: VisiblePost[]; assets: MediaAsset[]; packs: VisiblePack[]; access: boolean; live: boolean; mode: "demo" | "showcase" | "gateway" | "unavailable"; bio: string;
 }) {
   const [tab, setTab] = useState<Tab>("posts");
   const filtered = assets.filter(asset => asset.mediaType === (tab === "photos" ? "image" : "video"));
+  const activePacks = packs.filter(pack => pack.mediaType === (tab === "photos" ? "image" : "video"));
   return (
     <div className="profile-body">
       <div className="tabs" role="tablist" aria-label="Conteúdo do Space">
@@ -28,9 +30,14 @@ export function ProfileTabs({ posts, assets, access, live, mode, bio }: {
       <div className="feed-layout">
         <div className="feed-main">
           {tab === "posts" && <div className="feed-list">{posts.map(post => <PostCard key={post.id} post={post} access={access} live={live} />)}</div>}
-          {(tab === "photos" || tab === "videos") && (filtered.length ?
-            <div className="gallery-grid">{filtered.map(asset => <MediaCard key={asset.key} asset={asset} access={access} live={live} compact />)}</div> :
-            <div className="empty-panel">Ainda não há conteúdo disponível nesta secção.</div>)}
+          {(tab === "photos" || tab === "videos") && <>
+            {activePacks.map(pack => <div className="pack-summary" key={pack.id}>
+              <div><span className="eyebrow">PACK RESERVADO</span><h2>{pack.title}</h2><p>{pack.count} {pack.mediaType === "image" ? "fotografias" : "vídeos"} · acesso por convite</p></div>
+              {pack.locked && <LockedMedia visibility="access_link" />}
+            </div>)}
+            {filtered.length ? <div className="gallery-grid">{filtered.map(asset => <MediaCard key={asset.key} asset={asset} access={access} live={live} compact />)}</div> :
+              !activePacks.length && <div className="empty-panel">Ainda não há conteúdo disponível nesta secção.</div>}
+          </>}
           {tab === "about" && <div className="about-panel"><p className="eyebrow">SOBRE ESTE SPACE</p><h2>Um lugar para partilhar</h2><p>{bio}</p><p className="muted-copy">Ana Oliveira é uma identidade de demonstração do FaceLove Spaces. O retrato do perfil é gerado e não representa alguém presente nos ficheiros de teste.</p></div>}
         </div>
         <aside className="feed-aside">
@@ -38,7 +45,7 @@ export function ProfileTabs({ posts, assets, access, live, mode, bio }: {
           <h3>Mais perto de quem escolhe partilhar.</h3>
           <p>Explore publicações, fotos e vídeos. Alguns momentos exigem um convite.</p>
           <div className="aside-divider" />
-          <span>{mode === "demo" ? "Media ficcional de demonstração" : mode === "gateway" ? "Media lab ligado" : "Media lab indisponível"}</span>
+          <span>{mode === "demo" || mode === "showcase" ? "Media ficcional de demonstração" : mode === "gateway" ? "Media lab ligado · packs por convite" : "Media lab indisponível"}</span>
         </aside>
       </div>
     </div>

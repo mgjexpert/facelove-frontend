@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 const COOKIE_NAME = "facelove_demo_access";
 const fixtureMode = () => !process.env.MEDIA_GATEWAY_URL && !process.env.MEDIA_GATEWAY_TOKEN && process.env.VERCEL_ENV !== "production";
-const secret = () => process.env.FACELOVE_DEMO_COOKIE_SECRET || (fixtureMode() ? "fixture-only-no-real-media-secret" : "");
+const secret = () => fixtureMode() ? "fixture-only-no-real-media-secret" : (process.env.FACELOVE_DEMO_COOKIE_SECRET?.length ?? 0) >= 32 ? process.env.FACELOVE_DEMO_COOKIE_SECRET! : "";
 const equal = (a: string, b: string) => {
   const left = Buffer.from(a);
   const right = Buffer.from(b);
@@ -19,7 +19,7 @@ export function accessTokenStatus(token: string): AccessStatus {
   const configured = process.env.FACELOVE_DEMO_ACCESS_TOKEN;
   if (!configured || !secret() || !equal(token, configured)) return "invalid";
   const expiry = process.env.FACELOVE_DEMO_ACCESS_EXPIRES_AT;
-  if (expiry && Date.now() >= Date.parse(expiry)) return "expired";
+  if (expiry && (!Number.isFinite(Date.parse(expiry)) || Date.now() >= Date.parse(expiry))) return "expired";
   return "valid";
 }
 export function createAccessCookie() {

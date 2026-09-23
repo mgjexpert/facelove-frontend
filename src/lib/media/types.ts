@@ -1,6 +1,6 @@
 export type Visibility = "public" | "followers" | "private" | "access_link";
 export type MediaKind = "image" | "video";
-export type MediaProvider = "mega" | "google_drive" | "supabase" | "cloudflare" | "mux" | "external";
+export type MediaProvider = "demo" | "gateway" | "mega" | "google_drive" | "supabase" | "cloudflare" | "mux" | "external";
 
 export interface MediaAsset {
   key: string;
@@ -10,6 +10,19 @@ export interface MediaAsset {
   title: string;
   visibility: Visibility;
   thumbnailReference?: string;
+  packId?: string;
+}
+
+export interface MediaPack {
+  id: string;
+  title: string;
+  mediaType: MediaKind;
+  assetKeys: string[];
+}
+
+export interface VisiblePack extends Omit<MediaPack, "assetKeys"> {
+  count: number;
+  locked: boolean;
 }
 
 export interface PlaybackSource {

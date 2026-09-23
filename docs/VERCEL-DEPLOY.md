@@ -1,5 +1,7 @@
 # FaceLove Spaces Alpha — preview na Vercel
 
+> Este documento descreve a preview sem media real. Para os dois projetos em `main` e o domínio `facelove.online`, siga [PRODUCTION-VERCEL.md](PRODUCTION-VERCEL.md).
+
 ## Preview sem media pessoal
 
 Importe `mgjexpert/facelove-frontend` como projeto **Next.js** na Vercel, com root directory no diretório raiz, install command `npm ci` e build command `npm run build`. Use a branch `work/spaces-alpha` para uma **Preview Deployment**; não associe `facelove.online` nem promova o deploy para Production nesta fase. O deploy de preview não precisa de variáveis de ambiente: usa apenas o perfil de demonstração e dez ficheiros ficcionais gerados para testar fotos, vídeos e HTTP Range.

@@ -3,7 +3,7 @@ import type { MediaAsset, Post, Visibility } from "./types";
 
 const images = Array.from({ length: 6 }, (_, index): MediaAsset => ({
   key: `ana-img-${String(index + 1).padStart(3, "0")}`,
-  provider: "mega",
+  provider: "demo",
   mediaType: "image",
   mimeType: "image/jpeg",
   title: `Fotografia ${index + 1}`,
@@ -11,7 +11,7 @@ const images = Array.from({ length: 6 }, (_, index): MediaAsset => ({
 }));
 const videos = Array.from({ length: 4 }, (_, index): MediaAsset => ({
   key: `ana-video-${String(index + 1).padStart(3, "0")}`,
-  provider: "mega",
+  provider: "demo",
   mediaType: "video",
   mimeType: "video/mp4",
   title: `Vídeo ${index + 1}`,

@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   const response = NextResponse.redirect(new URL("/@anaoliveira?access=granted", request.url), 303);
   const cookie = createAccessCookie();
   response.cookies.set(COOKIE_NAME, cookie.value, {
-    httpOnly: true, secure: request.nextUrl.protocol === "https:", sameSite: "lax",
+    httpOnly: true, secure: process.env.VERCEL_ENV === "production" || request.nextUrl.protocol === "https:", sameSite: "lax",
     path: "/", expires: cookie.expires,
   });
   return response;
