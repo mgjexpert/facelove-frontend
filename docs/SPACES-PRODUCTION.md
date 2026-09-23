@@ -4,7 +4,7 @@
 
 O Supabase `uwsuavbskwankqchqkcu` tem migrations em `supabase/migrations/` (nomes e versões iguais ao histórico remoto). `profiles`, `spaces`, `posts`, `albums`, `media_assets` e `post_media` são dados persistentes. Foram criados perfis editoriais de Ana Oliveira, Emily, Jade, Micaela Gomes e Eva Martinez, cinco posts públicos de apresentação (texto provisório), onze álbuns privados e onze fontes MEGA. Não existem contas reais no Auth: `owner_id` está vazio até associação por email verificado. Nenhuma pessoa representada nos ficheiros foi identificada por estes nomes.
 
-`public.media_sources` contém URLs de pasta com chaves de partilha MEGA. `public.access_links` guarda apenas hashes SHA-256 de tokens. Ambos têm RLS, grants revogados de `anon` e `authenticated` e ficam legíveis apenas com a chave service role do **gateway**. Não copiar os seus valores para fixtures, frontend, screenshots, issues ou Git. `access_events` está preparado para auditoria, mas o gateway ainda não escreve eventos; `uses_count` e o contador de ativações funcionam.
+`public.media_sources` contém URLs de pasta com chaves de partilha MEGA. `public.access_links` guarda apenas hashes SHA-256 de tokens. Ambos têm RLS, grants revogados de `anon` e `authenticated` e ficam legíveis apenas com a chave service role do **gateway**. Não copiar os seus valores para fixtures, frontend, screenshots, issues ou Git. O gateway regista ativações de convite em `access_events`; o Supabase Auth gere sessões e registos de autenticação. Não há auditoria de cada visualização ou cada byte servido.
 
 ## Vercel · dois projetos separados
 
