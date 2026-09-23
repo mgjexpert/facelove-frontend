@@ -1,18 +1,17 @@
 # FaceLove Spaces Alpha em `facelove.online`
 
-Esta é uma implantação **Alpha de produção** com perfil de demonstração e um convite partilhado. A hospedagem do frontend é Vercel; o gateway MEGA é um segundo projeto Vercel. O Supabase do projeto ainda não contém o schema de contas/posts com RLS e não é usado nesta fase. Não apresentar esta implantação como plataforma aberta de contas privadas até Auth, RLS, convites individuais, revogação e auditoria estarem implementados.
+Esta é uma implantação **Alpha de produção** com perfil de demonstração e um convite partilhado. A hospedagem do frontend é Vercel; o gateway MEGA é um segundo projeto Vercel. O Supabase do projeto ainda não contém o schema de contas/posts com RLS e não é usado nesta fase. A pasta MEGA fica associada à fixture da Ana, não a uma conta real. Não apresentar esta implantação como plataforma aberta de contas privadas até Auth, RLS, fontes por Space, convites individuais, revogação e auditoria estarem implementados.
 
 ## 1. Publicar primeiro o gateway
 
-Na Vercel, Import Git Repository → `mgjexpert/facelove-conteudo`. Projeto sugerido: `facelove-conteudo`; Production Branch: `main`; Framework Preset: **Other**; Root Directory: raiz; Install Command: `npm ci`; sem Build Command ou Output Directory. O ficheiro `vercel.json` mapeia as rotas para a Function Node e define `maxDuration: 300`. Configure estas três variáveis em **Production**, exclusivamente nesse projeto:
+Na Vercel, Import Git Repository → `mgjexpert/facelove-conteudo`. Projeto sugerido: `facelove-conteudo`; Production Branch: `main`; Framework Preset: **Other**; Root Directory: raiz; Install Command: `npm ci`; sem Build Command ou Output Directory. O ficheiro `vercel.json` mapeia as rotas para a Function Node e define `maxDuration: 300`. Configure estas **duas** variáveis em **Production**, exclusivamente nesse projeto:
 
 | Variável | Como obter |
 | --- | --- |
 | `MEGA_FOLDER_URL` | Link completo da pasta MEGA autorizada, com chave após `#`. Guardar só na Vercel. |
-| `MEDIA_MANIFEST_BASE64` | Conteúdo do manifest privado local codificado em base64, gerado conforme [VERCEL-GATEWAY.md](https://github.com/mgjexpert/facelove-conteudo/blob/main/docs/VERCEL-GATEWAY.md). |
 | `MEDIA_GATEWAY_TOKEN` | Segredo aleatório forte, de pelo menos 24 caracteres. Usar o mesmo valor no frontend. |
 
-Faça deploy da branch `main` e use a URL **Production** estável indicada no painel, por exemplo `https://<gateway>.vercel.app`. Verifique `GET /health = 200` e `GET /v1/catalog` sem token `= 401`. Depois confira o catálogo autenticado e pelo menos um `HEAD` e um `Range` a um ficheiro MEGA. **Não associe `facelove.online` ao gateway.** Não coloque URL da pasta, manifest ou token em `NEXT_PUBLIC_`, no Git ou nesta conversa.
+Não é preciso gerar, copiar ou configurar `MEDIA_MANIFEST_BASE64`: o gateway descobre imagens e MP4 diretamente na pasta e subpastas, e mantém o catálogo por instância durante cinco minutos. Faça deploy da branch `main` e use a URL **Production** estável indicada no painel, por exemplo `https://<gateway>.vercel.app`. Verifique `GET /health = 200` e `GET /v1/catalog` sem token `= 401`. Depois confira o catálogo autenticado e pelo menos um `HEAD` e um `Range` a um ficheiro MEGA. **Não associe `facelove.online` ao gateway.** Não coloque URL da pasta nem token em `NEXT_PUBLIC_`, no Git ou nesta conversa. [Instruções do gateway](https://github.com/mgjexpert/facelove-conteudo/blob/main/docs/VERCEL-GATEWAY.md).
 
 ## 2. Publicar o frontend
 
@@ -38,10 +37,10 @@ Depois de validar as URLs `*.vercel.app`, no projeto **frontend** abra Settings 
 
 1. `https://facelove.online/`, `/spaces` e `/@anaoliveira` carregam em mobile e desktop. As fotos e os vídeos públicos são **ficcionais** e identificados como demo.
 2. O catálogo do gateway autorizado contém 50 fotos e 5 MP4 em dois packs com `visibility=access_link`; não devolve `externalId` ao cliente. O gateway responde `401` sem Bearer.
-3. `/api/media/mega-video-001` no frontend, sem convite, responde `403`. A página pública não inclui keys de media privada no HTML.
+3. `/api/media/<key-do-video>` no frontend, sem convite, responde `403`. Obtenha a key opaca no catálogo autorizado; a página pública não inclui keys de media privada no HTML.
 4. O convite privado em `/s/<token>` ativa um cookie HttpOnly; depois, a aba Fotos mostra 50 entradas e Vídeos mostra 5. `HEAD` do vídeo responde `200`, um seek HTTP Range responde `206`, e uma faixa fora dos limites responde `416`.
 5. Verificar carga, latência de primeira leitura, egress e duração das Functions com clips reais antes de abrir tráfego. O teste local não substitui a verificação após o deploy.
 
 ## Limites de acesso do Alpha
 
-Todos os packs reais deste manifest usam **um único convite partilhado**. A sessão expira em no máximo 24 horas e respeita `FACELOVE_DEMO_ACCESS_EXPIRES_AT`; para revogar sessões imediatamente é preciso rodar `FACELOVE_DEMO_COOKIE_SECRET`. Não há limite de usos, revogação por pessoa, Auth Supabase, RLS ou auditoria persistida. Este controlo serve para o piloto privado, não para uma oferta pública de subscrições ou distribuição de ficheiros pessoais. MEGA e Google Drive continuam substituíveis atrás do gateway, mas o adapter Drive ainda não foi implementado/testado; apenas MEGA tem playback e Range validados.
+Todos os packs reais desta pasta usam **um único convite partilhado**. A sessão expira em no máximo 24 horas e respeita `FACELOVE_DEMO_ACCESS_EXPIRES_AT`; para revogar sessões imediatamente é preciso rodar `FACELOVE_DEMO_COOKIE_SECRET`. Não há limite de usos, revogação por pessoa, Auth Supabase, RLS ou auditoria persistida. Este controlo serve para o piloto privado, não para uma oferta pública de subscrições ou distribuição de ficheiros pessoais. O projeto ainda não permite que cada creator ligue a própria pasta: essa opção requer contas reais, fontes por Space e configuração segura no servidor. MEGA e Google Drive continuam substituíveis atrás do gateway, mas o adapter Drive ainda não foi implementado/testado; apenas MEGA tem playback e Range validados.
