@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ana-post-001",
+    "publishedAt": "2026-09-18",
+    "caption": "Um pouco do que quero guardar por aqui. Bem-vindos ao meu Space.",
+    "visibility": "public",
+    "mediaKeys": ["ana-img-001", "ana-img-002"]
+  },
+  {
+    "id": "ana-post-002",
+    "publishedAt": "2026-09-16",
+    "caption": "Primeiro vídeo da seleção de demonstração.",
+    "visibility": "public",
+    "mediaKeys": ["ana-video-001"]
+  },
+  {
+    "id": "ana-post-003",
+    "publishedAt": "2026-09-12",
+    "caption": "Novos registos na galeria.",
+    "visibility": "public",
+    "mediaKeys": ["ana-img-003", "ana-img-004", "ana-video-002"]
+  },
+  {
+    "id": "ana-post-004",
+    "publishedAt": "2026-09-10",
+    "caption": "Uma seleção reservada a quem recebeu um convite.",
+    "visibility": "access_link",
+    "mediaKeys": ["ana-img-005", "ana-video-003", "ana-img-006", "ana-video-004"]
+  },
+  {
+    "id": "ana-post-005",
+    "publishedAt": "2026-09-06",
+    "caption": "Atualização para seguidores.",
+    "visibility": "followers",
+    "mediaKeys": []
+  }
+]

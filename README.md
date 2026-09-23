@@ -4,7 +4,7 @@ Aplicação principal do **FaceLove.Online**.
 
 Este repositório concentra a experiência de produto: identidade, autenticação, perfis, **FaceLove Spaces**, mural, permissões, acesso privado e, progressivamente, Community, Dating e Events.
 
-> Estado atual: **bootstrap / Spaces Alpha 0.1**
+> Estado atual: **Spaces Alpha — implantação em `main` preparada para Vercel**
 
 ## Visão do ecossistema
 
@@ -174,3 +174,13 @@ O Alpha é considerado utilizável quando existirem:
 - identidade visual FaceLove consistente.
 
 O objetivo inicial não é reconstruir Tinder, OnlyFans ou Facebook. É provar o **núcleo FaceLove** de identidade + conteúdo + acesso e deixar a fundação preparada para os restantes produtos.
+
+## Spaces Alpha implementado
+
+Em `main`, execute `npm ci && npm run dev`. Estão implementadas as rotas `/`, `/spaces`, `/@anaoliveira`, `/access`, `/s/[token]` e o proxy autorizado `/api/media/[key]`. A preview sem configuração usa seis fotografias e quatro clips ficcionais com Range; os packs reais do MEGA exigem o gateway irmão e um convite válido.
+
+O código de `MediaCard` e `MediaPlayer` consome a URL interna FaceLove. A origem MEGA é resolvida apenas no servidor de `facelove-conteudo`. Consulte [docs/ALPHA-RUNBOOK.md](docs/ALPHA-RUNBOOK.md) e [docs/VERCEL-DEPLOY.md](docs/VERCEL-DEPLOY.md) para configurar, testar e conhecer os limites desta fase.
+
+## Produção Alpha em `main`
+
+O produto pode ser importado na Vercel a partir de `main` e associado a `facelove.online`. O gateway MEGA deve ser importado de `mgjexpert/facelove-conteudo` como **outro projeto Vercel**, com segredos e manifest privado somente em Environment Variables. O perfil público pode mostrar media ficcional; o primeiro pack real contém 50 fotografias e 5 vídeos, todos com acesso por convite. Consulte [docs/PRODUCTION-VERCEL.md](docs/PRODUCTION-VERCEL.md) antes de ligar o domínio. Ainda não há Supabase Auth/RLS, convites persistidos ou funcionalidades de conta reais.
