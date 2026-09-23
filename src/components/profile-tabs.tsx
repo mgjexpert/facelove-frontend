@@ -14,12 +14,12 @@ const tabs: { id: Tab; name: string; icon: typeof Grid2X2 }[] = [
   { id: "about", name: "Sobre", icon: Info },
 ];
 
-export function ProfileTabs({ posts, assets, packs, access, live, mode, bio }: {
-  posts: VisiblePost[]; assets: MediaAsset[]; packs: VisiblePack[]; access: boolean; live: boolean; mode: "demo" | "showcase" | "gateway" | "unavailable"; bio: string;
+export function ProfileTabs({ posts, assets, packs, access, live, mode, bio, author = "Ana Oliveira", username = "anaoliveira" }: {
+  posts: VisiblePost[]; assets: MediaAsset[]; packs: VisiblePack[]; access: boolean; live: boolean; mode: "demo" | "showcase" | "gateway" | "unavailable"; bio: string; author?: string; username?: string;
 }) {
   const [tab, setTab] = useState<Tab>("posts");
   const filtered = assets.filter(asset => asset.mediaType === (tab === "photos" ? "image" : "video"));
-  const activePacks = packs.filter(pack => pack.mediaType === (tab === "photos" ? "image" : "video"));
+  const activePacks = packs.filter(pack => pack.mediaType === "mixed" || pack.mediaType === (tab === "photos" ? "image" : "video"));
   return (
     <div className="profile-body">
       <div className="tabs" role="tablist" aria-label="Conteúdo do Space">
@@ -29,16 +29,16 @@ export function ProfileTabs({ posts, assets, packs, access, live, mode, bio }: {
       </div>
       <div className="feed-layout">
         <div className="feed-main">
-          {tab === "posts" && <div className="feed-list">{posts.map(post => <PostCard key={post.id} post={post} access={access} live={live} />)}</div>}
+          {tab === "posts" && <div className="feed-list">{posts.map(post => <PostCard key={post.id} post={post} access={access} live={live} author={author} username={username} />)}</div>}
           {(tab === "photos" || tab === "videos") && <>
             {activePacks.map(pack => <div className="pack-summary" key={pack.id}>
-              <div><span className="eyebrow">PACK RESERVADO</span><h2>{pack.title}</h2><p>{pack.count} {pack.mediaType === "image" ? "fotografias" : "vídeos"} · acesso por convite</p></div>
+              <div><span className="eyebrow">ÁLBUM RESERVADO</span><h2>{pack.title}</h2><p>{pack.count} {pack.mediaType === "image" ? "fotografias" : pack.mediaType === "video" ? "vídeos" : "ficheiros"} · acesso por convite</p></div>
               {pack.locked && <LockedMedia visibility="access_link" />}
             </div>)}
             {filtered.length ? <div className="gallery-grid">{filtered.map(asset => <MediaCard key={asset.key} asset={asset} access={access} live={live} compact />)}</div> :
               !activePacks.length && <div className="empty-panel">Ainda não há conteúdo disponível nesta secção.</div>}
           </>}
-          {tab === "about" && <div className="about-panel"><p className="eyebrow">SOBRE ESTE SPACE</p><h2>Um lugar para partilhar</h2><p>{bio}</p><p className="muted-copy">Ana Oliveira é uma identidade de demonstração do FaceLove Spaces. O retrato do perfil é gerado e não representa alguém presente nos ficheiros de teste.</p></div>}
+          {tab === "about" && <div className="about-panel"><p className="eyebrow">SOBRE ESTE SPACE</p><h2>Um lugar para partilhar</h2><p>{bio}</p><p className="muted-copy">Perfil editorial em preparação. A identidade ilustrativa não identifica pessoas nos ficheiros privados.</p></div>}
         </div>
         <aside className="feed-aside">
           <p className="eyebrow">BEM-VINDO AO SPACE</p>

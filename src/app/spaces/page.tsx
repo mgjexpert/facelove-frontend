@@ -1,9 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, LockKeyhole, Images, Video } from "lucide-react";
+import { getProfiles, supabaseConfigured } from "@/lib/supabase-data";
 
 export const metadata = { title: "Spaces · FaceLove" };
-export default function SpacesPage() {
+export const dynamic = "force-dynamic";
+export default async function SpacesPage() {
+  const profiles = supabaseConfigured() ? await getProfiles() : [];
   return (
     <main className="spaces-page">
       <section className="spaces-intro">
@@ -21,6 +24,15 @@ export default function SpacesPage() {
         <div><Video size={20} /><span>Vídeos com player</span></div>
         <div><LockKeyhole size={20} /><span>Convites privados</span></div>
       </div>
+      {profiles.length > 0 && <section className="spaces-directory" aria-label="Spaces">
+        <p className="eyebrow">DESCOBRIR SPACES</p><h2>Conheça os primeiros Spaces</h2>
+        <div className="spaces-list">{profiles.map(profile =>
+          <Link key={profile.id} href={`/@${profile.username}`} className="spaces-person">
+            <span className="directory-avatar">{profile.display_name.slice(0, 1)}</span>
+            <span><strong>{profile.display_name}</strong><small>@{profile.username} · Perfil em preparação</small></span>
+            <ArrowUpRight size={18} />
+          </Link>)}</div>
+      </section>}
     </main>
   );
 }

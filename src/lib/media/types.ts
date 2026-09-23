@@ -11,12 +11,13 @@ export interface MediaAsset {
   visibility: Visibility;
   thumbnailReference?: string;
   packId?: string;
+  spaceSlug?: string;
 }
 
 export interface MediaPack {
   id: string;
   title: string;
-  mediaType: MediaKind;
+  mediaType: MediaKind | "mixed";
   assetKeys: string[];
 }
 

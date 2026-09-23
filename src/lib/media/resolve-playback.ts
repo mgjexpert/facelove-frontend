@@ -5,9 +5,9 @@ export function resolvePlaybackSource(asset: MediaAsset, access: boolean): Playb
   if (!canView(asset.visibility, access)) return null;
   return {
     kind: asset.mediaType,
-    url: `/api/media/${encodeURIComponent(asset.key)}`,
+    url: `/api/media/${encodeURIComponent(asset.key)}${asset.spaceSlug ? `?space=${encodeURIComponent(asset.spaceSlug)}` : ""}`,
     mimeType: asset.mimeType,
-    posterUrl: asset.thumbnailReference ? `/api/media/${encodeURIComponent(asset.thumbnailReference)}` : undefined,
+    posterUrl: asset.thumbnailReference ? `/api/media/${encodeURIComponent(asset.thumbnailReference)}${asset.spaceSlug ? `?space=${encodeURIComponent(asset.spaceSlug)}` : ""}` : undefined,
     supportsRange: asset.mediaType === "video",
   };
 }

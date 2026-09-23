@@ -11,7 +11,7 @@ export function AccessEntry({ demoAvailable }: { demoAvailable: boolean }) {
       <div className="access-emblem"><KeyRound size={26} /></div>
       <p className="eyebrow">FACELOVE SPACES / ACESSO</p>
       <h1>Tem um convite?</h1>
-      <p className="muted-copy">Introduza o código que recebeu para consultar o conteúdo reservado de Ana Oliveira.</p>
+      <p className="muted-copy">Introduza o código recebido para consultar o álbum reservado a que tem acesso.</p>
       <form onSubmit={event => { event.preventDefault(); if (value.trim()) router.push(`/s/${encodeURIComponent(value.trim())}`); }}>
         <label className="field-label" htmlFor="token">Código do convite</label>
         <input id="token" className="access-input" value={value} onChange={event => setValue(event.target.value)} autoComplete="off" placeholder="Introduzir código" required />
