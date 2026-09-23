@@ -14,8 +14,9 @@ export const dynamic = "force-dynamic";
 
 export default async function AnaPage({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
-  const username = decodeURIComponent(handle).slice(1).toLowerCase();
-  if (!handle.startsWith("@") || !/^[a-z0-9_]{3,32}$/.test(username)) notFound();
+  const decoded = decodeURIComponent(handle);
+  const username = decoded.slice(1).toLowerCase();
+  if (!decoded.startsWith("@") || !/^[a-z0-9_]{3,32}$/.test(username)) notFound();
   const persisted = supabaseConfigured() ? await getSpace(username) : null;
   if (supabaseConfigured() && !persisted) notFound();
   if (!persisted && username !== "anaoliveira") notFound();
