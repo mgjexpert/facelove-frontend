@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict'
+
+const root = (process.env.FACELOVE_PREVIEW_URL || 'http://127.0.0.1:3000').replace(/\/$/, '')
+const open = (path, init) => fetch(root + path, { redirect: 'manual', ...init })
+const pages = await Promise.all(['/', '/spaces', '/@anaoliveira', '/s/demo-preview'].map(path => open(path)))
+assert.deepEqual(pages.map(response => response.status), [200, 200, 200, 200])
+
+const photo = await open('/api/media/ana-img-001')
+assert.equal(photo.status, 200)
+assert.equal(photo.headers.get('content-type'), 'image/jpeg')
+const head = await open('/api/media/ana-video-001', { method: 'HEAD' })
+assert.equal(head.status, 200)
+assert.equal(head.headers.get('accept-ranges'), 'bytes')
+const video = await open('/api/media/ana-video-001', { headers: { Range: 'bytes=2048-4095' } })
+assert.equal(video.status, 206)
+assert.equal((await video.arrayBuffer()).byteLength, 2048)
+assert.match(video.headers.get('content-range'), /^bytes 2048-4095\//)
+const invalid = await open('/api/media/ana-video-001', { headers: { Range: 'bytes=999999999-' } })
+assert.equal(invalid.status, 416)
+const blocked = await open('/api/media/ana-video-003')
+assert.equal(blocked.status, 403)
+
+const activation = await open('/api/access/activate', { method: 'POST', body: new URLSearchParams({ token: 'demo-preview' }) })
+assert.equal(activation.status, 303)
+const cookie = activation.headers.get('set-cookie')?.split(';')[0]
+assert.ok(cookie)
+const authorized = await open('/api/media/ana-video-003', { headers: { Cookie: cookie, Range: 'bytes=4096-8191' } })
+assert.equal(authorized.status, 206)
+assert.equal((await authorized.arrayBuffer()).byteLength, 4096)
+console.log(JSON.stringify({ pages: pages.map(response => response.status), photo: photo.status, head: head.status, seek: video.status, invalidRange: invalid.status, blocked: blocked.status, activation: activation.status, authorizedSeek: authorized.status }))

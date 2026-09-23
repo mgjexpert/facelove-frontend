@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { hasDemoAccess } from "@/lib/access";
 import { assetByKey, canView } from "@/lib/media/fixture";
 import { getGatewayCatalog, proxyMedia } from "@/lib/media/providers/gateway";
+import { serveDemoMedia } from "@/lib/media/providers/demo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +17,10 @@ async function handle(request: NextRequest, context: Context, method: "GET" | "H
     return NextResponse.json({ error: "Acesso necessário" }, { status: 403, headers: { "Cache-Control": "no-store" } });
   }
   try {
+    // The synthetic provider is available only in fixture mode. Authorization above
+    // applies equally to both providers and runs before any media file is opened.
+    const demo = await serveDemoMedia(key, request.headers.get("range"), method);
+    if (demo) return demo;
     const catalog = await getGatewayCatalog();
     const current = catalog?.find(item => item.key === key);
     if (!current || current.visibility !== asset.visibility || current.mediaType !== asset.mediaType) {

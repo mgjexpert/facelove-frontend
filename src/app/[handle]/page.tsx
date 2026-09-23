@@ -15,7 +15,7 @@ export default async function AnaPage({ params }: { params: Promise<{ handle: st
   const { handle } = await params;
   if (decodeURIComponent(handle) !== "@anaoliveira") notFound();
   const access = await hasDemoAccess();
-  const { assets, posts, live } = await getSpaceContent(access);
+  const { assets, posts, live, mode } = await getSpaceContent(access);
   const visibleAssets = assets.filter(asset => canView(asset.visibility, access));
   return (
     <main className="profile-page">
@@ -36,7 +36,7 @@ export default async function AnaPage({ params }: { params: Promise<{ handle: st
             <div className="profile-details"><span><MapPin size={15} /> {ana.profile.location}</span><span className="detail-dot" /><span>FaceLove Spaces</span>{access && <span className="access-badge"><LockKeyhole size={13} /> Convite ativo</span>}</div>
           </div>
         </div>
-        <ProfileTabs posts={posts} assets={visibleAssets} access={access} live={live} bio={ana.profile.bio} />
+        <ProfileTabs posts={posts} assets={visibleAssets} access={access} live={live} mode={mode} bio={ana.profile.bio} />
       </div>
     </main>
   );

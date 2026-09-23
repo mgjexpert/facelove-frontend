@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
 const COOKIE_NAME = "facelove_demo_access";
-const fixtureMode = () => !process.env.MEDIA_GATEWAY_URL && !process.env.MEDIA_GATEWAY_TOKEN;
+const fixtureMode = () => !process.env.MEDIA_GATEWAY_URL && !process.env.MEDIA_GATEWAY_TOKEN && process.env.VERCEL_ENV !== "production";
 const secret = () => process.env.FACELOVE_DEMO_COOKIE_SECRET || (fixtureMode() ? "fixture-only-no-real-media-secret" : "");
 const equal = (a: string, b: string) => {
   const left = Buffer.from(a);

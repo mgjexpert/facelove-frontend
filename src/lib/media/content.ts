@@ -1,5 +1,6 @@
 import { assetByKey, canView, mediaFixture, postsFixture } from "./fixture";
 import { getGatewayCatalog } from "./providers/gateway";
+import { isDemoProviderActive } from "./providers/demo";
 import type { MediaAsset, VisiblePost } from "./types";
 
 export async function getSpaceContent(access: boolean) {
@@ -20,5 +21,6 @@ export async function getSpaceContent(access: boolean) {
       assets: permitted ? post.mediaKeys.map(key => byKey.get(key) ?? assetByKey(key)).filter((item): item is MediaAsset => Boolean(item)) : [],
     };
   });
-  return { assets, posts, live: liveCatalog !== null };
+  const mode: "demo" | "gateway" | "unavailable" = isDemoProviderActive() ? "demo" : liveCatalog !== null ? "gateway" : "unavailable";
+  return { assets, posts, live: mode !== "unavailable", mode };
 }

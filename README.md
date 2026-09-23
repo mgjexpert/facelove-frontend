@@ -177,6 +177,6 @@ O objetivo inicial não é reconstruir Tinder, OnlyFans ou Facebook. É provar o
 
 ## Preview implementada — Spaces Alpha 0.1
 
-Na branch `work/spaces-alpha`, execute `npm ci && npm run dev`. Estão implementadas as rotas `/`, `/spaces`, `/@anaoliveira`, `/access`, `/s/[token]` e o proxy autorizado `/api/media/[key]`. A fixture visual funciona sem configuração de media; fotografias e vídeos reais exigem o laboratório irmão local.
+Na branch `work/spaces-alpha`, execute `npm ci && npm run dev`. Estão implementadas as rotas `/`, `/spaces`, `/@anaoliveira`, `/access`, `/s/[token]` e o proxy autorizado `/api/media/[key]`. A preview sem configuração usa seis fotografias e quatro clips ficcionais com Range; fotografias e vídeos reais exigem o laboratório irmão.
 
-O código de `MediaCard` e `MediaPlayer` consome a URL interna FaceLove. A origem MEGA é resolvida apenas no servidor de `facelove-conteudo`. Consulte [docs/ALPHA-RUNBOOK.md](docs/ALPHA-RUNBOOK.md) para configurar, testar e conhecer os limites desta fase.
+O código de `MediaCard` e `MediaPlayer` consome a URL interna FaceLove. A origem MEGA é resolvida apenas no servidor de `facelove-conteudo`. Consulte [docs/ALPHA-RUNBOOK.md](docs/ALPHA-RUNBOOK.md) e [docs/VERCEL-DEPLOY.md](docs/VERCEL-DEPLOY.md) para configurar, testar e conhecer os limites desta fase.

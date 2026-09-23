@@ -130,6 +130,9 @@ em { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: #f
 .media-placeholder small, .media-video-placeholder small { color: #ceb5c0; font-size: .73rem }
 .media-video-placeholder { background: radial-gradient(circle at 50% 48%,#57374e,#271c2b 53%,#14121c); width: 100% }
 .video-start:hover .play-disc { transform: scale(1.08); background: #ffc0d2 }
+.video-poster { object-fit: cover; opacity: .73 }
+.video-poster-scrim { position: absolute; inset: 0; background: linear-gradient(0deg,rgba(12,9,17,.8),transparent 68%) }
+.video-start > .play-disc, .video-start > span:not(.video-poster-scrim), .video-start > small { position: relative; z-index: 1 }
 .play-disc { display: flex; align-items: center; justify-content: center; height: 65px; width: 65px; border-radius: 50%; background: var(--facelove-pink); color: #21101a; transition: transform .2s, background .2s }
 .video-element { background: black; object-fit: contain }
 .media-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; font-size: .76rem; color: #d9d0d9 }

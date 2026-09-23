@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { Play } from "lucide-react";
 import type { PlaybackSource } from "@/lib/media/types";
 
@@ -11,6 +12,8 @@ export function MediaPlayer({ source, title, live }: { source: PlaybackSource; t
   if (!playing) {
     return (
       <button type="button" className="media-stage media-video-placeholder video-start" onClick={() => setPlaying(true)} aria-label={`Reproduzir ${title}`}>
+        {source.posterUrl && <Image src={source.posterUrl} alt="" fill sizes="(max-width: 700px) 100vw, 600px" unoptimized className="video-poster" />}
+        <span className="video-poster-scrim" />
         <span className="play-disc"><Play size={25} fill="currentColor" /></span>
         <span>{title}</span>
         <small>Reproduzir vídeo</small>

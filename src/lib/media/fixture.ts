@@ -16,6 +16,7 @@ const videos = Array.from({ length: 4 }, (_, index): MediaAsset => ({
   mimeType: "video/mp4",
   title: `Vídeo ${index + 1}`,
   visibility: index < 2 ? "public" : "access_link",
+  thumbnailReference: `ana-img-${String(index < 2 ? index + 1 : index + 3).padStart(3, "0")}`,
 }));
 
 export const mediaFixture = [...images, ...videos];

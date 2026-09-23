@@ -13,8 +13,8 @@ const tabs: { id: Tab; name: string; icon: typeof Grid2X2 }[] = [
   { id: "about", name: "Sobre", icon: Info },
 ];
 
-export function ProfileTabs({ posts, assets, access, live, bio }: {
-  posts: VisiblePost[]; assets: MediaAsset[]; access: boolean; live: boolean; bio: string;
+export function ProfileTabs({ posts, assets, access, live, mode, bio }: {
+  posts: VisiblePost[]; assets: MediaAsset[]; access: boolean; live: boolean; mode: "demo" | "gateway" | "unavailable"; bio: string;
 }) {
   const [tab, setTab] = useState<Tab>("posts");
   const filtered = assets.filter(asset => asset.mediaType === (tab === "photos" ? "image" : "video"));
@@ -38,7 +38,7 @@ export function ProfileTabs({ posts, assets, access, live, bio }: {
           <h3>Mais perto de quem escolhe partilhar.</h3>
           <p>Explore publicações, fotos e vídeos. Alguns momentos exigem um convite.</p>
           <div className="aside-divider" />
-          <span>{live ? "Media lab ligado" : "Prévia visual · media lab não ligado"}</span>
+          <span>{mode === "demo" ? "Media ficcional de demonstração" : mode === "gateway" ? "Media lab ligado" : "Media lab indisponível"}</span>
         </aside>
       </div>
     </div>

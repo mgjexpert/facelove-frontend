@@ -6,7 +6,8 @@
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify:preview": "node scripts/verify-preview.mjs"
   },
   "dependencies": {
     "lucide-react": "1.47.0",
