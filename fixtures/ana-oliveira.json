@@ -1,0 +1,22 @@
+{
+  "profile": {
+    "username": "anaoliveira",
+    "displayName": "Ana Oliveira",
+    "bio": "Lifestyle, viagens e momentos que gosto de partilhar. Algumas coisas ficam por aqui, outras apenas com quem convido. ❤️",
+    "location": "Brasil",
+    "isCreator": true,
+    "isDemo": true
+  },
+  "space": {
+    "slug": "anaoliveira",
+    "title": "Ana Oliveira",
+    "description": "Um espaço pessoal no FaceLove.",
+    "visibility": "public"
+  },
+  "stats": {
+    "posts": 0,
+    "followers": 0,
+    "media": 0
+  },
+  "tabs": ["posts", "photos", "videos", "about"]
+}
