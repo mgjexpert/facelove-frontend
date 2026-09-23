@@ -6,9 +6,9 @@ export default async function Login({ searchParams }: { searchParams: Promise<{e
   const { error } = await searchParams;
   return <main className="center-page"><div className="access-panel account-panel">
     <p className="eyebrow">FACELOVE / CONTA</p><h1>Entrar no Space</h1>
-    <p className="muted-copy">Entre com o email verificado e a sua palavra-passe. O nome @utilizador identifica o seu Space depois de a conta ser associada.</p>
+    <p className="muted-copy">Entre com o email verificado ou o seu @utilizador e a palavra-passe. O nome de utilizador fica disponível depois de a conta ser associada ao Space.</p>
     {error && <p role="alert">Não foi possível entrar. Verifique as credenciais.</p>}
-    <form action={signIn} className="account-form"><label>Email<input name="email" type="email" required autoComplete="email" /></label>
+    <form action={signIn} className="account-form"><label>Email ou @utilizador<input name="email" type="text" required autoComplete="username" /></label>
       <label>Palavra-passe<input name="password" type="password" required autoComplete="current-password" /></label>
       <button className="button button-primary" type="submit">Entrar</button></form>
     <Link href="/signup" className="quiet-link">Criar conta</Link>

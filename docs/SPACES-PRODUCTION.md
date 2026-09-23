@@ -32,7 +32,7 @@ set owner_id = (select id from auth.users where email = 'email-verificado@exampl
 where username = 'anaoliveira' and owner_id is null;
 ```
 
-Substituir email e username e verificar a pessoa antes de executar. Não atribuir uma conta desconhecida a um Space real. O dashboard permite editar nome, bio, posts públicos e títulos/descrições dos álbuns depois da associação. O login usa email e senha nesta entrega; login diretamente por `@handle`, 2FA, Google e Apple exigem configuração e fluxo próprios e **não estão ativados**. A equipa pode alterar metadata e fontes manualmente no Supabase SQL Editor.
+Substituir email e username e verificar a pessoa antes de executar. Não atribuir uma conta desconhecida a um Space real. O dashboard permite editar nome, bio, posts públicos e títulos/descrições dos álbuns depois da associação. O login aceita email ou `@handle` e a palavra-passe guardada pelo Supabase Auth. 2FA, Google e Apple exigem configuração e fluxo próprios e **não estão ativados**. A equipa pode alterar metadata e fontes manualmente no Supabase SQL Editor.
 
 ## Publicação pública
 
