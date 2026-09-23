@@ -8,11 +8,12 @@ if (!/^[a-z0-9_]{3,32}$/.test(username || '') || !/^[1-9]\d*$/.test(order || '')
   process.exit(1)
 }
 const base = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-if (!base || !key) throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY são necessários no ambiente local')
+const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
+if (!base || !key) throw new Error('SUPABASE_URL e SUPABASE_SECRET_KEY são necessários no ambiente local')
+const authorization = key.startsWith('sb_secret_') ? {} : { Authorization: `Bearer ${key}` }
 async function rest(table, query, options = {}) {
   const response = await fetch(new URL(`/rest/v1/${table}${query ? '?' + query : ''}`, base), {
-    ...options, headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'return=representation', ...options.headers }
+    ...options, headers: { apikey: key, ...authorization, 'Content-Type': 'application/json', Prefer: 'return=representation', ...options.headers }
   })
   if (!response.ok) throw new Error(`Operação falhou (${response.status})`)
   return response.json()

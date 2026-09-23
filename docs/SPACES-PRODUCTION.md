@@ -17,10 +17,10 @@ O Supabase `uwsuavbskwankqchqkcu` tem migrations em `supabase/migrations/` (nome
 | `facelove-frontend` | `MEDIA_GATEWAY_TOKEN` | Mesmo valor longo e aleatório no gateway (mínimo 24 caracteres) |
 | `facelove-frontend` | `FACELOVE_DEMO_COOKIE_SECRET` | Segredo aleatório com mínimo 32 caracteres; assina cookies de álbum, servidor apenas |
 | `facelove-conteudo` | `SUPABASE_URL` | `https://uwsuavbskwankqchqkcu.supabase.co` |
-| `facelove-conteudo` | `SUPABASE_SERVICE_ROLE_KEY` | Chave **secreta** do Supabase; configurar **só** neste projeto Vercel |
+| `facelove-conteudo` | `SUPABASE_SECRET_KEY` | Chave **secret** (`sb_secret_...`) em Supabase → Settings → API Keys; configurar **só** neste projeto Vercel. `SUPABASE_SERVICE_ROLE_KEY` é uma alternativa legacy |
 | `facelove-conteudo` | `MEDIA_GATEWAY_TOKEN` | Mesmo valor do frontend; servidor apenas |
 
-As variáveis devem existir no ambiente **Production** dos projetos respetivos; adicionar Preview se quiser testar branches. Fazer **Redeploy** nos dois projetos após configurar; `facelove-conteudo` primeiro. Remover `MEGA_FOLDER_URL` antigo do projeto gateway depois de confirmar a leitura do catálogo Supabase. Nunca adicionar `SUPABASE_SERVICE_ROLE_KEY` ao projeto frontend ou usar o prefixo `NEXT_PUBLIC_` para segredos.
+As variáveis devem existir no ambiente **Production** dos projetos respetivos; adicionar Preview se quiser testar branches. Fazer **Redeploy** nos dois projetos após configurar; `facelove-conteudo` primeiro. Remover `MEGA_FOLDER_URL` antigo do projeto gateway depois de confirmar a leitura do catálogo Supabase. Nunca adicionar uma secret key ao projeto frontend ou usar o prefixo `NEXT_PUBLIC_` para segredos.
 
 ## Auth e associação de contas
 
@@ -50,7 +50,7 @@ Cada álbum pertence a um Space e aceita `media_type=image|video|mixed`. `media_
 
 Para mudar uma pasta: localizar o `album_id` em `albums`, editar a **única** linha respetiva em `media_sources` no Supabase SQL Editor. O catálogo do gateway tem cache de 5 minutos. O adapter MEGA está funcional; `google_drive` é uma opção do modelo e do contrato, mas ainda requer implementação e teste de credenciais, descoberta e Range antes de ser operacional.
 
-Para criar um convite de álbum em máquina administrativa, colocar `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` apenas no ambiente local, então executar:
+Para criar um convite de álbum em máquina administrativa, colocar `SUPABASE_URL` e `SUPABASE_SECRET_KEY` apenas no ambiente local, então executar:
 
 ```bash
 node scripts/create-album-invite.mjs anaoliveira 1 7d free
