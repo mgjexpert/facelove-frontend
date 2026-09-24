@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BadgeCheck, LockKeyhole, MapPin, MessageCircle, UserPlus } from "lucide-react";
+import { LockKeyhole, MapPin, MessageCircle, UserPlus } from "lucide-react";
 import ana from "../../../fixtures/ana-oliveira.json";
 import { hasDemoAccess } from "@/lib/access";
 import { getSpaceContent } from "@/lib/media/content";
@@ -41,7 +41,7 @@ export default async function AnaPage({ params }: { params: Promise<{ handle: st
           </div>
           <div className="profile-identity">
             <p className="demo-kicker">{profile?.editorial_draft ? "PERFIL EM PREPARAÇÃO" : "FACELOVE SPACE"}</p>
-            <h1>{displayName} {username === "anaoliveira" && <BadgeCheck size={22} aria-label="Perfil de demonstração" />}</h1>
+            <h1>{displayName}</h1>
             <p className="username">@{username}</p>
             <p className="bio">{bio}</p>
             <div className="profile-details"><span><MapPin size={15} /> FaceLove Spaces</span>{access && <span className="access-badge"><LockKeyhole size={13} /> Convite ativo</span>}</div>
