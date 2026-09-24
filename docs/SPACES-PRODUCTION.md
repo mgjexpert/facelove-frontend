@@ -46,7 +46,7 @@ O frontend lê as linhas públicas via RLS e serve o ficheiro por `/api/media/[i
 
 ## Álbuns e convites
 
-Cada álbum pertence a um Space e aceita `media_type=image|video|mixed`. `media_sources` contém `provider` e a origem privada; o gateway localiza a subpasta escolhida, seleciona até **50 fotografias e 5 MP4 por álbum**, entrega catálogo sanitizado e faz streaming HTTP Range. Uma foto e um vídeo podem ficar na mesma pasta se o álbum for `mixed`. As coleções atuais têm pastas separadas; Micaela tem uma terceira coleção especial.
+Cada álbum pertence a um Space e aceita `media_type=image|video|mixed`. `media_sources` contém `provider` e a origem privada; o gateway localiza a subpasta escolhida, entrega catálogo sanitizado e faz streaming HTTP Range. Nos Spaces persistidos, o catálogo enumera os ficheiros disponíveis; as quotas dos convites são aplicadas no servidor durante a autorização. Uma foto e um vídeo podem ficar na mesma pasta se o álbum for `mixed`. As coleções atuais têm pastas separadas; Micaela tem uma terceira coleção especial.
 
 Para mudar uma pasta: localizar o `album_id` em `albums`, editar a **única** linha respetiva em `media_sources` no Supabase SQL Editor. O catálogo do gateway tem cache de 5 minutos. O adapter MEGA está funcional; `google_drive` é uma opção do modelo e do contrato, mas ainda requer implementação e teste de credenciais, descoberta e Range antes de ser operacional.
 
@@ -59,6 +59,23 @@ node scripts/create-album-invite.mjs micaelagomes 3 7d manual_paid
 ```
 
 O comando mostra o link completo **uma única vez**; regista apenas o hash no Supabase. `manual_paid` significa concessão manual após validação externa, sem cobrança automática. Em `access_links`, `expires_at=NULL` permite reativar o convite sem prazo, `max_uses` limita ativações e `revoked_at=now()` revoga imediatamente também sessões ativas. Cada ativação dá uma sessão assinada até 30 dias (limitada pela validade do convite); o browser precisa de reabrir o convite para renovar. O gateway valida revogação em cada acesso a media. Não há pagamentos, cobranças nem subscrições.
+
+### Convites para o Space inteiro
+
+Existem convites **Convidado (30 fotos, 10 vídeos)**, **VIP (100, 20)**, **VIP Premium (200, 50)** e **VIP ALL-IN (todos)**. Contam-se os ficheiros por ordem estável de álbuns e nomes; a quota vale para o Space inteiro, mesmo que os ficheiros estejam em pastas distintas. O servidor só apresenta os ficheiros autorizados e repete a verificação em cada pedido à rota `/api/media/[key]`. O download de ficheiros durante a vigência do acesso não pode ser impedido depois de transmitidos ao browser.
+
+Os prazos possíveis são **5 minutos (visita de cortesia)**, **12 horas**, **24 horas**, **7 dias**, **1 mês (30 dias)** e **vitalício**. O relógio começa na **primeira ativação** e não reinicia. Um link vitalício não tem expiração automática, mas pode ser revogado; cada cookie assinado dura até 30 dias e o visitante reativa o convite para renovar quando ainda houver utilizações. Para convites pessoais recomenda-se uma ativação por link. Defina uma quantidade maior apenas se pretender partilhar o mesmo convite por várias pessoas, mantendo o prazo comum à primeira ativação.
+
+O dono de um Space já associado a uma conta verificada pode criar e revogar convites na secção **Acessos** do FaceLove Studio. O link gerado é apresentado uma única vez. Antes de associar `owner_id`, a administração pode criar o convite pela máquina local, com as variáveis Supabase apenas no processo administrativo:
+
+```bash
+node scripts/create-space-invite.mjs anaoliveira guest 5m
+node scripts/create-space-invite.mjs emily vip 7d
+node scripts/create-space-invite.mjs anaoliveira vip_premium 1mo
+node scripts/create-space-invite.mjs anaoliveira all_in lifetime
+```
+
+O quarto argumento opcional é o máximo de ativações (predefinição `1`, máximo `100`). Não colocar o segredo Supabase no projeto frontend da Vercel; o Studio solicita a emissão através do gateway autenticado servidor a servidor. Os links antigos de um único álbum continuam válidos. A coleção especial da Micaela faz parte do Space e por isso fica disponível nos convites ALL-IN; os níveis com quota dão acesso pela ordem dos álbuns. Para distribuição comercial dessa coleção é necessário definir políticas e pagamentos separadamente.
 
 ## Verificação
 

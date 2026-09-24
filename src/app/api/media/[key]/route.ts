@@ -3,7 +3,8 @@ import { hasDemoAccess } from "@/lib/access";
 import { assetByKey, canView } from "@/lib/media/fixture";
 import { getGatewayCatalog, proxyMedia } from "@/lib/media/providers/gateway";
 import { isDemoProviderActive, serveDemoMedia } from "@/lib/media/providers/demo";
-import { hasAlbumAccess } from "@/lib/album-access";
+import { getSpaceAccess, hasAlbumAccess } from "@/lib/album-access";
+import { allowedSpaceKeys } from "@/lib/media/entitlements";
 import { publicRows, supabaseConfigured, type PublicMedia } from "@/lib/supabase-data";
 
 export const runtime = "nodejs";
@@ -34,14 +35,28 @@ async function handle(request: NextRequest, context: Context, method: "GET" | "H
       return new NextResponse(method === "HEAD" ? null : upstream.body, { status: upstream.status, headers });
     } catch { return NextResponse.json({ error: "Media indisponível" }, { status: 502 }); }
   }
-  // The gateway catalogue contains metadata only. The provider stream is not
-  // opened until a permitted asset has been found and access is verified.
+  // Check the signed session before the gateway even discovers a private folder.
+  const [profile] = !fixture ? await publicRows<{ id: string }>("profiles", `username=eq.${space}&select=id`) : [];
+  const [spaceRow] = profile ? await publicRows<{ id: string }>("spaces", `profile_id=eq.${profile.id}&status=eq.published&select=id`) : [];
+  const [albumRows, spaceGrant] = !fixture && spaceRow ? await Promise.all([
+    publicRows<{ id: string }>("albums", `space_id=eq.${spaceRow.id}&select=id`), getSpaceAccess(spaceRow.id),
+  ]) : [[], null] as const;
+  const albumGrants = await Promise.all(albumRows.map(album => hasAlbumAccess(album.id)));
+  if (!fixture && !spaceGrant && !albumGrants.some(Boolean)) {
+    return NextResponse.json({ error: "Acesso necessário" }, { status: 403, headers: { "Cache-Control": "no-store" } });
+  }
   const catalog = fixture ? null : await getGatewayCatalog(space);
   const asset = fixture ?? catalog?.assets.find(item => item.key === key);
   if (!asset || (fixture && (supabaseConfigured() || (fixture.visibility !== "public" && !isDemoProviderActive())))) {
     return NextResponse.json({ error: "Asset não encontrado" }, { status: 404, headers: { "Cache-Control": "no-store" } });
   }
-  const access = fixture ? await hasDemoAccess() : asset.packId ? await hasAlbumAccess(asset.packId) : false;
+  let access = fixture ? await hasDemoAccess() : false;
+  if (!fixture && asset.packId && catalog) {
+    access = albumGrants[albumRows.findIndex(album => album.id === asset.packId)] || false;
+    if (!access) {
+      access = allowedSpaceKeys(catalog, spaceGrant).has(key);
+    }
+  }
   if (!canView(asset.visibility, access)) {
     return NextResponse.json({ error: "Acesso necessário" }, { status: 403, headers: { "Cache-Control": "no-store" } });
   }

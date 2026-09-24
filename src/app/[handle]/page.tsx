@@ -20,7 +20,7 @@ export default async function AnaPage({ params }: { params: Promise<{ handle: st
   const persisted = supabaseConfigured() ? await getSpace(username) : null;
   if (supabaseConfigured() && !persisted) notFound();
   if (!persisted && username !== "anaoliveira") notFound();
-  const content = persisted ? await getPersistedContent(username, persisted.albums, persisted.posts, persisted.media, persisted.postMedia) : await getSpaceContent(await hasDemoAccess());
+  const content = persisted ? await getPersistedContent(username, persisted.space.id, persisted.albums, persisted.posts, persisted.media, persisted.postMedia) : await getSpaceContent(await hasDemoAccess());
   const { assets, posts, packs, live, mode } = content;
   const access: boolean = persisted ? ("access" in content && content.access === true) : await hasDemoAccess();
   const visibleAssets = assets.filter(asset => canView(asset.visibility, access));

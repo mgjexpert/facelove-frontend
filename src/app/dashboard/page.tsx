@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { saveProfile, createPublicPost, renameAlbum } from "./actions";
 import { signOut } from "../login/actions";
+import { inviteGateway, type ManagedInvite } from "@/lib/invite-manager";
+import { AccessStudio } from "@/components/access-studio";
 
 export const metadata = { title: "Dashboard · FaceLove", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -13,8 +15,9 @@ export default async function Dashboard() {
   const { data: profile } = await client.from("profiles").select("id,username,display_name,bio").eq("owner_id", user.id).maybeSingle();
   const { data: space } = profile ? await client.from("spaces").select("id").eq("profile_id", profile.id).maybeSingle() : { data: null };
   const { data: albums } = space ? await client.from("albums").select("id,title,description,media_type").eq("space_id", space.id).order("sort_order") : { data: [] };
+  const invites: ManagedInvite[] | null = space ? await inviteGateway(space.id, "GET").catch(() => null) as ManagedInvite[] | null : null;
   return <main className="dashboard-page"><div className="dashboard-heading"><div><p className="eyebrow">FACELOVE / DASHBOARD</p>
-    <h1>{profile ? `O Space de ${profile.display_name}` : "Conta pendente"}</h1>
+    <h1>{profile ? `FaceLove Studio · ${profile.display_name}` : "Conta pendente"}</h1>
     <p className="muted-copy">{profile ? "Gira a apresentação e as publicações do seu Space." : "O seu email está confirmado. A equipa deve associar esta conta ao perfil certo antes de poder editar."}</p></div>
     <form action={signOut}><button className="button button-dark">Sair</button></form></div>
     {profile && <><Link className="quiet-link" href={`/@${profile.username}`}>Ver o meu Space →</Link>
@@ -31,7 +34,8 @@ export default async function Dashboard() {
           <label>Título<input name="title" defaultValue={album.title} required maxLength={100} /></label>
           <label>Descrição<textarea name="description" defaultValue={album.description} rows={2} maxLength={500} /></label>
           <button className="button button-dark">Guardar álbum</button></form></section>)}</div>
-      <p className="muted-copy">A origem das pastas e a emissão de convites são administradas pela equipa nesta fase. O acesso a coleções especiais pode ser concedido manualmente.</p>
+      {invites ? <AccessStudio invites={invites} /> : <p className="muted-copy">Gestão de convites temporariamente indisponível.</p>}
+      <p className="muted-copy">A ligação das pastas continua administrada pela equipa. Convites gratuitos ou concedidos manualmente dão acesso sem pagamentos automáticos.</p>
     </>}
   </main>;
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { accessTokenStatus, COOKIE_NAME, createAccessCookie } from "@/lib/access";
-import { albumCookieName, redeemInvite } from "@/lib/album-access";
+import { albumCookieName, redeemInvite, spaceCookieName } from "@/lib/album-access";
 import { publicRows, supabaseConfigured } from "@/lib/supabase-data";
 
 export async function POST(request: NextRequest) {
@@ -12,11 +12,12 @@ export async function POST(request: NextRequest) {
   const token = String(form.get("token") ?? "");
   const redeemed = await redeemInvite(token);
   if (redeemed) {
-    const [album] = await publicRows<{space_id:string}>("albums", `id=eq.${redeemed.albumId}&select=space_id`);
-    const [space] = album ? await publicRows<{profile_id:string}>("spaces", `id=eq.${album.space_id}&select=profile_id`) : [];
+    const [album] = redeemed.albumId ? await publicRows<{space_id:string}>("albums", `id=eq.${redeemed.albumId}&select=space_id`) : [];
+    const targetSpaceId = redeemed.spaceId || album?.space_id;
+    const [space] = targetSpaceId ? await publicRows<{profile_id:string}>("spaces", `id=eq.${targetSpaceId}&select=profile_id`) : [];
     const [profile] = space ? await publicRows<{username:string}>("profiles", `id=eq.${space.profile_id}&select=username`) : [];
     const response = NextResponse.redirect(new URL(`/@${profile?.username || "anaoliveira"}?access=granted`, request.url), 303);
-    response.cookies.set(albumCookieName(redeemed.albumId), redeemed.value, {
+    response.cookies.set(redeemed.spaceId ? spaceCookieName(redeemed.spaceId) : albumCookieName(redeemed.albumId!), redeemed.value, {
       httpOnly: true, secure: process.env.VERCEL_ENV === "production" || request.nextUrl.protocol === "https:",
       sameSite: "lax", path: "/", expires: redeemed.expires,
     });

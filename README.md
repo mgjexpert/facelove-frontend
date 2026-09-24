@@ -183,8 +183,8 @@ O código de `MediaCard` e `MediaPlayer` consome a URL interna FaceLove. A orige
 
 ## Produção Alpha em `main`
 
-O produto pode ser importado na Vercel a partir de `main` e associado a `facelove.online`. O gateway MEGA deve ser importado de `mgjexpert/facelove-conteudo` como **outro projeto Vercel**, com apenas `MEGA_FOLDER_URL` e `MEDIA_GATEWAY_TOKEN` no servidor. O catálogo da pasta é descoberto automaticamente, sem manifest codificado em Base64. O perfil público pode mostrar media ficcional; o primeiro pack real contém até 50 fotografias e 5 vídeos, todos com acesso por convite. Consulte [docs/PRODUCTION-VERCEL.md](docs/PRODUCTION-VERCEL.md) antes de ligar o domínio. Ainda não há Supabase Auth/RLS, fontes por conta, convites persistidos ou funcionalidades de conta reais.
+O produto é publicado na Vercel a partir de `main` e associado a `facelove.online`. O gateway MEGA é outro projeto Vercel, com catálogo privado Supabase e convites persistidos. Os primeiros passos deste piloto são mantidos aqui como histórico; para a configuração vigente consulte [docs/SPACES-PRODUCTION.md](docs/SPACES-PRODUCTION.md).
 
 ## Spaces com catálogo persistente
 
-O passo seguinte criou perfis, álbuns e posts persistentes no Supabase, migrações com RLS, Auth por email, dashboard básico e convites por álbum. A configuração atual e as limitações operacionais estão em [docs/SPACES-PRODUCTION.md](docs/SPACES-PRODUCTION.md); a secção Alpha acima permanece como histórico do piloto anterior.
+O passo seguinte criou perfis, álbuns e posts persistentes no Supabase, migrações com RLS, Auth por email, FaceLove Studio, convites por álbum e por Space inteiro com quotas e duração. A configuração atual e as limitações operacionais estão em [docs/SPACES-PRODUCTION.md](docs/SPACES-PRODUCTION.md); a secção Alpha acima permanece como histórico do piloto anterior.
