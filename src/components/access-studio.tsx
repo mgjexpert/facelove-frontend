@@ -10,6 +10,7 @@ const tierNames: Record<string, string> = { guest: "Convidado · 30 fotos / 10 v
 export function AccessStudio({ invites }: { invites: ManagedInvite[] }) {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
+  const [duration, setDuration] = useState("7d");
   const [pending, startTransition] = useTransition();
   return <section className="studio-access" id="acessos">
     <div className="studio-heading"><div><p className="eyebrow">FACELOVE STUDIO / ACESSOS</p><h2>Convites para o teu Space</h2>
@@ -19,12 +20,13 @@ export function AccessStudio({ invites }: { invites: ManagedInvite[] }) {
       startTransition(async () => { const result = await createSpaceInvite(data); if (result.error) setError(result.error); else setUrl(result.url || ""); });
     }}>
       <label>Nível<select name="tier" defaultValue="guest">{Object.entries(tierNames).map(([key, name]) => <option value={key} key={key}>{name}</option>)}</select></label>
-      <label>Prazo após ativação<select name="duration" defaultValue="7d">
+      <label>Prazo após ativação<select name="duration" value={duration} onChange={event => setDuration(event.target.value)}>
         <option value="5m">Visita de cortesia · 5 minutos</option><option value="12h">12 horas</option><option value="24h">24 horas</option>
         <option value="7d">7 dias</option><option value="1mo">1 mês (30 dias)</option><option value="lifetime">Vitalício</option>
       </select></label>
       <label>Identificação<input name="label" maxLength={100} placeholder="Ex.: Convite para uma visita" /></label>
-      <label>Ativações permitidas<input name="maxUses" type="number" min="1" max="100" defaultValue="1" /></label>
+      <label>Ativações permitidas<input name="maxUses" type="number" min="1" max="100" defaultValue="1" disabled={duration === "lifetime"} />
+        {duration === "lifetime" && <small>Sem limite para permitir a renovação do acesso.</small>}</label>
       <button type="submit" className="button button-primary" disabled={pending}>{pending ? "A criar…" : "Criar convite"}</button>
     </form>
     {error && <p role="alert" className="studio-error">{error}</p>}

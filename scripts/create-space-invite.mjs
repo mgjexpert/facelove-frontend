@@ -5,9 +5,9 @@ import { createHash, randomBytes } from 'node:crypto'
 const [username, tier, duration, maxUsesText = '1'] = process.argv.slice(2)
 const tiers = { guest: [30, 10], vip: [100, 20], vip_premium: [200, 50], all_in: [null, null] }
 const durations = { '5m': 300, '12h': 43200, '24h': 86400, '7d': 604800, '1mo': 2592000, lifetime: null }
-const maxUses = Number(maxUsesText)
+const maxUses = duration === 'lifetime' ? null : Number(maxUsesText)
 if (!/^[a-z0-9_]{3,32}$/.test(username || '') || !Object.hasOwn(tiers, tier) ||
-  !Object.hasOwn(durations, duration) || !Number.isSafeInteger(maxUses) || maxUses < 1 || maxUses > 100) {
+  !Object.hasOwn(durations, duration) || (duration !== 'lifetime' && (!Number.isSafeInteger(maxUses) || maxUses < 1 || maxUses > 100))) {
   console.error('Uso: node scripts/create-space-invite.mjs <username> <guest|vip|vip_premium|all_in> <5m|12h|24h|7d|1mo|lifetime> [maxUses]')
   process.exit(1)
 }

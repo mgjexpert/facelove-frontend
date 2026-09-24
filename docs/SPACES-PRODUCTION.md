@@ -64,7 +64,7 @@ O comando mostra o link completo **uma única vez**; regista apenas o hash no Su
 
 Existem convites **Convidado (30 fotos, 10 vídeos)**, **VIP (100, 20)**, **VIP Premium (200, 50)** e **VIP ALL-IN (todos)**. Contam-se os ficheiros por ordem estável de álbuns e nomes; a quota vale para o Space inteiro, mesmo que os ficheiros estejam em pastas distintas. O servidor só apresenta os ficheiros autorizados e repete a verificação em cada pedido à rota `/api/media/[key]`. O download de ficheiros durante a vigência do acesso não pode ser impedido depois de transmitidos ao browser.
 
-Os prazos possíveis são **5 minutos (visita de cortesia)**, **12 horas**, **24 horas**, **7 dias**, **1 mês (30 dias)** e **vitalício**. O relógio começa na **primeira ativação** e não reinicia. Um link vitalício não tem expiração automática, mas pode ser revogado; cada cookie assinado dura até 30 dias e o visitante reativa o convite para renovar quando ainda houver utilizações. Para convites pessoais recomenda-se uma ativação por link. Defina uma quantidade maior apenas se pretender partilhar o mesmo convite por várias pessoas, mantendo o prazo comum à primeira ativação.
+Os prazos possíveis são **5 minutos (visita de cortesia)**, **12 horas**, **24 horas**, **7 dias**, **1 mês (30 dias)** e **vitalício**. O relógio começa na **primeira ativação** e não reinicia. Um link vitalício não tem expiração automática, mas pode ser revogado; cada cookie assinado dura até 30 dias e o visitante reativa o mesmo link para renovar. Por isso, convites vitalícios permitem ativações ilimitadas. Para convites pessoais temporários recomenda-se uma ativação por link. Defina uma quantidade maior apenas se pretender partilhar o mesmo convite por várias pessoas, mantendo o prazo comum à primeira ativação.
 
 O dono de um Space já associado a uma conta verificada pode criar e revogar convites na secção **Acessos** do FaceLove Studio. O link gerado é apresentado uma única vez. Antes de associar `owner_id`, a administração pode criar o convite pela máquina local, com as variáveis Supabase apenas no processo administrativo:
 
@@ -75,7 +75,7 @@ node scripts/create-space-invite.mjs anaoliveira vip_premium 1mo
 node scripts/create-space-invite.mjs anaoliveira all_in lifetime
 ```
 
-O quarto argumento opcional é o máximo de ativações (predefinição `1`, máximo `100`). Não colocar o segredo Supabase no projeto frontend da Vercel; o Studio solicita a emissão através do gateway autenticado servidor a servidor. Os links antigos de um único álbum continuam válidos. A coleção especial da Micaela faz parte do Space e por isso fica disponível nos convites ALL-IN; os níveis com quota dão acesso pela ordem dos álbuns. Para distribuição comercial dessa coleção é necessário definir políticas e pagamentos separadamente.
+O quarto argumento opcional é o máximo de ativações dos convites temporários (predefinição `1`, máximo `100`). Nos vitalícios este limite é ignorado para que o visitante possa renovar o cookie. Não colocar o segredo Supabase no projeto frontend da Vercel; o Studio solicita a emissão através do gateway autenticado servidor a servidor. Os links antigos de um único álbum continuam válidos. A coleção especial da Micaela faz parte do Space e por isso fica disponível nos convites ALL-IN; os níveis com quota dão acesso pela ordem dos álbuns. Para distribuição comercial dessa coleção é necessário definir políticas e pagamentos separadamente.
 
 ## Verificação
 

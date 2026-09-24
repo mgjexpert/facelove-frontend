@@ -53,10 +53,10 @@ export async function createSpaceInvite(form: FormData): Promise<{ url?: string;
   const tier = String(form.get("tier") || "");
   const duration = String(form.get("duration") || "");
   const label = String(form.get("label") || "").trim().slice(0, 100);
-  const maxUses = Number(form.get("maxUses") || 1);
+  const maxUses = duration === "lifetime" ? null : Number(form.get("maxUses") || 1);
   if (!["guest", "vip", "vip_premium", "all_in"].includes(tier) ||
     !["5m", "12h", "24h", "7d", "1mo", "lifetime"].includes(duration) ||
-    !Number.isSafeInteger(maxUses) || maxUses < 1 || maxUses > 100) return { error: "Selecione um nível e prazo válidos." };
+    (duration !== "lifetime" && (!Number.isSafeInteger(maxUses) || maxUses! < 1 || maxUses! > 100))) return { error: "Selecione um nível e prazo válidos." };
   try {
     const result = await inviteGateway(space.id, "POST", false, { tier, duration, maxUses, label });
     revalidatePath("/dashboard");
