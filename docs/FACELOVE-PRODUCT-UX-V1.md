@@ -182,3 +182,8 @@ The desired outcome is not a collection of redesigned pages. It is **one recogni
 ## Omnichannel / Atendimento.Center
 
 FaceLove customer-service automation is a separate operational workstream and must not be mixed into the product data/media architecture. The current WhatsApp production baseline, Typebot + Hostess AI + human-handoff target architecture, CRM boundary and security rules are documented in [FACELOVE-ATENDIMENTO-CENTER-V1.md](FACELOVE-ATENDIMENTO-CENTER-V1.md).
+
+
+## High-fidelity visual alignment
+
+The implementation must also follow [FACELOVE-VISUAL-ALIGNMENT-V2.md](FACELOVE-VISUAL-ALIGNMENT-V2.md). That document records the concrete visual gaps found in the current frontend and defines the required hero, brand assets, typography, profile imagery, Spaces discovery and CSS cleanup needed to match the approved FaceLove mockup direction.
