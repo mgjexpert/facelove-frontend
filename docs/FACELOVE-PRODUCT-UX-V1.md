@@ -177,3 +177,8 @@ Before proposing merge:
 Act as senior product designer + senior frontend engineer + conservative maintainer. The current backend/media work is valuable and must not be destabilized for visual convenience.
 
 The desired outcome is not a collection of redesigned pages. It is **one recognizable FaceLove ecosystem**, with the supplied campaign imagery defining the emotional world and the real application translating that world into a restrained, premium interface.
+
+
+## Omnichannel / Atendimento.Center
+
+FaceLove customer-service automation is a separate operational workstream and must not be mixed into the product data/media architecture. The current WhatsApp production baseline, Typebot + Hostess AI + human-handoff target architecture, CRM boundary and security rules are documented in [FACELOVE-ATENDIMENTO-CENTER-V1.md](FACELOVE-ATENDIMENTO-CENTER-V1.md).
