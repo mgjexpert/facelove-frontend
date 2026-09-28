@@ -88,6 +88,7 @@ Premium content is a product capability, not the objective of every message.
 - 06-CHANNELS-MULTIMODAL.md — WhatsApp, Instagram, Facebook, audio and images
 - 07-TEST-ROLL-OUT.md — rollout, tests and acceptance
 - 08-IMPLEMENTATION-HANDOFF.md — immediate checklist for the implementation agent
+- 09-PROMPT-PACK.md — versioned Persona/Planner/Writer/Memory prompt templates
 
 ## Non-negotiable constraints
 
